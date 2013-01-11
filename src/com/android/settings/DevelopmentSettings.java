@@ -249,6 +249,8 @@ public class DevelopmentSettings extends PreferenceFragment
         mAllPrefs.add(mAnimatorDurationScale);
         mAnimatorDurationScale.setOnPreferenceChangeListener(this);
         mOverlayDisplayDevices = (ListPreference) findPreference(OVERLAY_DISPLAY_DEVICES_KEY);
+        /* people reported that turning it on crashes, so we just disable it */
+        mDisabledPrefs.add(mOverlayDisplayDevices);
         mAllPrefs.add(mOverlayDisplayDevices);
         mOverlayDisplayDevices.setOnPreferenceChangeListener(this);
         mOpenGLTraces = (ListPreference) findPreference(OPENGL_TRACES_KEY);
