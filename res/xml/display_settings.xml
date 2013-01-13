@@ -63,4 +63,12 @@
                 android:title="@string/wifi_display_settings_title"
                 android:fragment="com.android.settings.wfd.WifiDisplaySettings" />
 
+        <ListPreference
+                android:key="pab_hwbutton_profile"
+                android:title="HTC One X hardware buttons"
+                android:summary="Override Home and Menu button actions on longpress"
+                android:persistent="false"
+                android:entries="@array/pab_hwbutton_profile_entries"
+                android:entryValues="@array/pab_hwbutton_profile_values" />
+
 </PreferenceScreen>

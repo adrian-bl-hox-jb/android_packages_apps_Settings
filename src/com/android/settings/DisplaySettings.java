@@ -61,6 +61,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_WIFI_DISPLAY = "wifi_display";
+    private static final String KEY_HWBUTTON_PROFILE = "pab_hwbutton_profile";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
@@ -74,6 +75,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     
     private ListPreference mScreenTimeoutPreference;
     private Preference mScreenSaverPreference;
+
+    private ListPreference mHwButtonProfilePreference;
 
     private WifiDisplayStatus mWifiDisplayStatus;
     private Preference mWifiDisplayPreference;
@@ -115,6 +118,11 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mScreenTimeoutPreference.setOnPreferenceChangeListener(this);
         disableUnusableTimeouts(mScreenTimeoutPreference);
         updateTimeoutPreferenceDescription(currentTimeout);
+
+        mHwButtonProfilePreference = (ListPreference) findPreference(KEY_HWBUTTON_PROFILE);
+        final int currentHwButtonProfile = Settings.System.getInt(resolver, KEY_HWBUTTON_PROFILE, 0);
+        mHwButtonProfilePreference.setValue(String.valueOf(currentHwButtonProfile));
+        mHwButtonProfilePreference.setOnPreferenceChangeListener(this);
 
         mFontSizePref = (WarnedListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
@@ -349,6 +357,14 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 updateTimeoutPreferenceDescription(value);
             } catch (NumberFormatException e) {
                 Log.e(TAG, "could not persist screen timeout setting", e);
+            }
+        }
+        if (KEY_HWBUTTON_PROFILE.equals(key)) {
+            int value = Integer.parseInt((String) objValue);
+            try {
+                Settings.System.putInt(getContentResolver(), KEY_HWBUTTON_PROFILE, value);
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "could not persist hwbutton_profile setting", e);
             }
         }
         if (KEY_FONT_SIZE.equals(key)) {
