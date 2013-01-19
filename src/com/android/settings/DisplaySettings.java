@@ -42,6 +42,7 @@ import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.internal.view.RotationPolicy;
 import com.android.settings.DreamSettings;
@@ -62,7 +63,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_SAVER = "screensaver";
     private static final String KEY_WIFI_DISPLAY = "wifi_display";
     private static final String KEY_HWBUTTON_PROFILE = "pab_hwbutton_profile";
-
+    private static final String KEY_UI_FORCE_OVERFLOW_BUTTON = "pab_force_overflow_button";
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
     private DisplayManager mDisplayManager;
@@ -77,6 +78,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private Preference mScreenSaverPreference;
 
     private ListPreference mHwButtonProfilePreference;
+
+    private CheckBoxPreference mOverflowButtonPreference;
 
     private WifiDisplayStatus mWifiDisplayStatus;
     private Preference mWifiDisplayPreference;
@@ -123,6 +126,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         final int currentHwButtonProfile = Settings.System.getInt(resolver, KEY_HWBUTTON_PROFILE, 0);
         mHwButtonProfilePreference.setValue(String.valueOf(currentHwButtonProfile));
         mHwButtonProfilePreference.setOnPreferenceChangeListener(this);
+
+        mOverflowButtonPreference = (CheckBoxPreference) findPreference(KEY_UI_FORCE_OVERFLOW_BUTTON);
+        mOverflowButtonPreference.setOnPreferenceChangeListener(this);
 
         mFontSizePref = (WarnedListPreference) findPreference(KEY_FONT_SIZE);
         mFontSizePref.setOnPreferenceChangeListener(this);
@@ -365,6 +371,15 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 Settings.System.putInt(getContentResolver(), KEY_HWBUTTON_PROFILE, value);
             } catch (NumberFormatException e) {
                 Log.e(TAG, "could not persist hwbutton_profile setting", e);
+            }
+        }
+        if (KEY_UI_FORCE_OVERFLOW_BUTTON.equals(key)) {
+            int value = ((Boolean)objValue == true ? 1 : 0);
+            try {
+                Settings.System.putInt(getContentResolver(), KEY_UI_FORCE_OVERFLOW_BUTTON, value);
+                Toast.makeText(getActivity(), "Please reboot to activate the change in all applications", Toast.LENGTH_LONG).show();
+            } catch (NumberFormatException e) {
+                Log.e(TAG, "could not persist overflow_button setting", e);
             }
         }
         if (KEY_FONT_SIZE.equals(key)) {

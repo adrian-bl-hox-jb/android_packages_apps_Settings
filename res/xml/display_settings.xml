@@ -71,4 +71,8 @@
                 android:entries="@array/pab_hwbutton_profile_entries"
                 android:entryValues="@array/pab_hwbutton_profile_values" />
 
+        <CheckBoxPreference
+            android:key="pab_force_overflow_button"
+            android:title="Show overflow button"/>
+
 </PreferenceScreen>
