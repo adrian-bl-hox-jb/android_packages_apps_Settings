@@ -80,12 +80,14 @@
     <!-- Hardware button longpress behaviour -->
     <string-array name="pab_hwbutton_profile_entries">
         <item>Default</item>
-        <item>Home = Google Now\nRight = Tasks</item>
+        <item>Hold home = Google Now\nHold right = Tasks\nPress right = Menu</item>
+	<item>Hold home = Google Now\nHold right = Menu\nPress right = Tasks</item>
     </string-array>
 
     <string-array name="pab_hwbutton_profile_values" translatable="false">
         <item>0</item>
         <item>1</item>
+	<item>2</item>
     </string-array>
     
     <!-- Display settings.  The delay in inactivity before the dream is shown. These are shown in a list dialog. -->
