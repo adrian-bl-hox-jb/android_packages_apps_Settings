@@ -67,6 +67,8 @@ import android.widget.Switch;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.io.File;
+import java.io.FileWriter;
 
 /*
  * Displays preferences for application developers.
@@ -127,6 +129,8 @@ public class DevelopmentSettings extends PreferenceFragment
             = "immediately_destroy_activities";
     private static final String APP_PROCESS_LIMIT_KEY = "app_process_limit";
 
+    private static final String PAB_CPUFREQ_KEY = "pab_cpufreq";
+
     private static final String SHOW_ALL_ANRS_KEY = "show_all_anrs";
 
     private static final String TAG_CONFIRM_ENFORCE = "confirm_enforce";
@@ -179,7 +183,7 @@ public class DevelopmentSettings extends PreferenceFragment
 
     private CheckBoxPreference mImmediatelyDestroyActivities;
     private ListPreference mAppProcessLimit;
-
+    private ListPreference mCpuFreqPreference;
     private CheckBoxPreference mShowAllANRs;
 
     private final ArrayList<Preference> mAllPrefs = new ArrayList<Preference>();
@@ -278,6 +282,10 @@ public class DevelopmentSettings extends PreferenceFragment
                 SHOW_ALL_ANRS_KEY);
         mAllPrefs.add(mShowAllANRs);
         mResetCbPrefs.add(mShowAllANRs);
+
+        mCpuFreqPreference = (ListPreference) findPreference(PAB_CPUFREQ_KEY);
+        mAllPrefs.add(mCpuFreqPreference);
+        mCpuFreqPreference.setOnPreferenceChangeListener(this);
 
         Preference hdcpChecking = findPreference(HDCP_CHECKING_KEY);
         if (hdcpChecking != null) {
@@ -897,6 +905,22 @@ public class DevelopmentSettings extends PreferenceFragment
         }
     }
 
+    private void writeCpufreqOptions(Object newValue) {
+        try {
+            final Context ctx = getActivity();
+            File fos = new File("/data/misc/hox_pp");
+            FileWriter fow = new FileWriter(fos);
+            fow.write(newValue.toString(), 0, newValue.toString().length());
+            fow.close();
+            /* tell the daemon to restart + re-read the value */
+            File tfq = new File("/dev/.tegra-fqd/suicide");
+            tfq.createNewFile();
+
+        } catch (Exception e) {
+            Log.v("", "writeCpufreqOptions: FATAL: "+e);
+        }
+    }
+
     private void writeShowAllANRsOptions() {
         Settings.Secure.putInt(getActivity().getContentResolver(),
                 Settings.Secure.ANR_SHOW_BACKGROUND,
@@ -1103,7 +1127,11 @@ public class DevelopmentSettings extends PreferenceFragment
         } else if (preference == mAppProcessLimit) {
             writeAppProcessLimitOptions(newValue);
             return true;
+        } else if (preference == mCpuFreqPreference) {
+            writeCpufreqOptions(newValue);
+            return true;
         }
+        
         return false;
     }
 

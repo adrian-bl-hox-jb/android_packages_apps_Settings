@@ -76,18 +76,39 @@
         <!-- Do not translate. -->
         <item>1800000</item>
     </string-array>
-    
+
+    <!-- Custom cpufreq settings -->
+    <string-array name="pab_cpufreq_entries">
+        <item>1500mhz (Tegra default)</item>
+        <item>1200mhz</item>
+        <item>880mhz</item>
+        <item>640mhz</item>
+        <item>475mhz</item>
+        <item>340mhz</item>
+        <item>Unmanaged</item>
+    </string-array>
+
+    <string-array name="pab_cpufreq_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>-1</item>
+    </string-array>
+
     <!-- Hardware button longpress behaviour -->
     <string-array name="pab_hwbutton_profile_entries">
         <item>Default</item>
         <item>Hold home = Google Now\nHold right = Tasks\nPress right = Menu</item>
-	<item>Hold home = Google Now\nHold right = Menu\nPress right = Tasks</item>
+        <item>Hold home = Google Now\nHold right = Menu\nPress right = Tasks</item>
     </string-array>
 
     <string-array name="pab_hwbutton_profile_values" translatable="false">
         <item>0</item>
         <item>1</item>
-	<item>2</item>
+        <item>2</item>
     </string-array>
     
     <!-- Display settings.  The delay in inactivity before the dream is shown. These are shown in a list dialog. -->

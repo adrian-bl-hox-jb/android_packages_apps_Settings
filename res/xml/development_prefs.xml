@@ -49,6 +49,16 @@
         android:title="@string/enforce_read_external_title"
         android:summary="@string/enforce_read_external_summary" />
 
+    <!-- this gets saved twice: in ther normal settings (persistent) and
+         by our own save function. if they run out-of-sinc: bad luck! //-->
+    <ListPreference
+        android:key="pab_cpufreq"
+        android:persistent="true"
+        android:title="CPU Frequency"
+        android:summary="HTC One X specific CPU settings"
+        android:entries="@array/pab_cpufreq_entries"
+        android:entryValues="@array/pab_cpufreq_values" />
+
     <PreferenceCategory android:key="debug_debugging_category"
             android:title="@string/debug_debugging_category">
 
