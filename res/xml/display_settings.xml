@@ -75,4 +75,10 @@
             android:key="pab_force_overflow_button"
             android:title="Show overflow button"/>
 
+        <com.android.settings.ButtonCapPreference
+                android:key="pab_cap_button_backlight"
+                android:title="Button Autobrightness"
+                android:dialogTitle="Button Autobrightness" />
+
+
 </PreferenceScreen>
