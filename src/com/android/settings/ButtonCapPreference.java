@@ -60,10 +60,11 @@ public class ButtonCapPreference extends SeekBarDialogPreference implements
         
         mCheckBox = (CheckBox)view.findViewById(R.id.lowlight_off);
         mCheckBox.setChecked( getPrefValue() < 0 );
-        
+        mCurrentValue = Math.abs(getPrefValue()*SEEK_BAR_EXT);
+
         mSeekBar = getSeekBar(view);
         mSeekBar.setMax(SEEK_BAR_RANGE);
-        mSeekBar.setProgress(Math.abs(getPrefValue()*SEEK_BAR_EXT));
+        mSeekBar.setProgress(mCurrentValue);
         mSeekBar.setEnabled(true);
         mSeekBar.setOnSeekBarChangeListener(this);
     }
