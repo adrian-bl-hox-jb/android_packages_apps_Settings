@@ -47,6 +47,7 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import java.io.File;
 
 import java.util.List;
 
@@ -76,6 +77,9 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private static final String KEY_DOCK_SOUNDS = "dock_sounds";
     private static final String KEY_DOCK_AUDIO_MEDIA_ENABLED = "dock_audio_media_enabled";
     private static final String KEY_VOLBTN_MUSIC_CTRL = "pab_volbtn_music_controls";
+    private static final String KEY_H2W_FORCED = "pab_h2w_forced";
+
+    private static final String H2W_MISC_PFILE = "/data/misc/pabx_h2w_forced";
 
     private static final String[] NEED_VOICE_CAPABILITY = {
             KEY_RINGTONE, KEY_DTMF_TONE, KEY_CATEGORY_CALLS,
@@ -92,6 +96,7 @@ public class SoundSettings extends SettingsPreferenceFragment implements
     private Preference mMusicFx;
     private CheckBoxPreference mLockSounds;
     private CheckBoxPreference mVolBtnMusicCtrl;
+    private CheckBoxPreference mH2wForced;
     private Preference mRingtonePreference;
     private Preference mNotificationPreference;
 
@@ -174,6 +179,10 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         mVolBtnMusicCtrl.setChecked(Settings.System.getInt(resolver,
                 Settings.System.VOLBTN_MUSIC_CONTROLS, 0) == 1);
 
+        mH2wForced = (CheckBoxPreference) findPreference(KEY_H2W_FORCED);
+        mH2wForced.setPersistent(false);
+        mH2wForced.setChecked(h2wfIsEnabled());
+
         mRingtonePreference = findPreference(KEY_RINGTONE);
         mNotificationPreference = findPreference(KEY_NOTIFICATION_SOUND);
 
@@ -251,6 +260,11 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         getActivity().unregisterReceiver(mReceiver);
     }
 
+    private boolean h2wfIsEnabled() {
+        File pf = new File(H2W_MISC_PFILE);
+        return pf.exists();
+    }
+
     private void updateRingtoneName(int type, Preference preference, int msg) {
         if (preference == null) return;
         Context context = getActivity();
@@ -314,6 +328,18 @@ public class SoundSettings extends SettingsPreferenceFragment implements
         } else if (preference == mVolBtnMusicCtrl) {
             Settings.System.putInt(getContentResolver(), Settings.System.VOLBTN_MUSIC_CONTROLS,
                     mVolBtnMusicCtrl.isChecked() ? 1 : 0);
+        } else if (preference == mH2wForced) {
+            Log.v(TAG, "Should set value now now now now nwo noooooooow");
+            try {
+                File pf = new File(H2W_MISC_PFILE);
+                if(mH2wForced.isChecked()) { pf.createNewFile(); }
+                else                       { pf.delete();        }
+                /* tell the daemon to restart + re-read the value */
+                File tfq = new File("/dev/.tegra-fqd/suicide");
+                tfq.createNewFile();
+            } catch (Exception e) {
+                Log.v(TAG, "failed to create h2w preference!");
+            }
         } else if (preference == mDockAudioSettings) {
             int dockState = mDockIntent != null
                     ? mDockIntent.getIntExtra(Intent.EXTRA_DOCK_STATE, 0)
