@@ -41,7 +41,7 @@ import android.util.SparseLongArray;
 
 import com.android.internal.app.IMediaContainerService;
 import com.google.android.collect.Maps;
-import com.google.common.collect.Sets;
+import com.google.android.collect.Sets;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -338,8 +338,8 @@ public class StorageMeasurement {
                             sendMessage(obtainMessage(MSG_CONNECTED, mDefaultContainer));
                         } else {
                             Intent service = new Intent().setComponent(DEFAULT_CONTAINER_COMPONENT);
-                            context.bindService(service, mDefContainerConn, Context.BIND_AUTO_CREATE,
-                                    UserHandle.USER_OWNER);
+                            context.bindServiceAsUser(service, mDefContainerConn, Context.BIND_AUTO_CREATE,
+                                    UserHandle.OWNER);
                         }
                     }
                     break;
@@ -423,7 +423,7 @@ public class StorageMeasurement {
 
             // Measure misc files not counted under media
             // we only do this on the HOX for the non-internal storage (= sdcard)
-            if (!mIsInternal) {
+            if (!mIsInternal && measureMedia) {
                 final File path = mIsInternal ? currentEnv.getExternalStorageDirectory()
                         : mVolume.getPathFile();
                 details.miscSize = measureMisc(imcs, path);
